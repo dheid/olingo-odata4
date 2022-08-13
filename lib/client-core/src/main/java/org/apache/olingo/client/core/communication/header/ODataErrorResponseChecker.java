@@ -54,7 +54,7 @@ public final class ODataErrorResponseChecker {
     ODataRuntimeException result = null;
 
     if (entity == null) {
-      result = new ODataClientErrorException(statusLine);
+      result = new ODataClientErrorException(statusLine, entity);
     } else {
       final ContentType contentType = accept.contains("xml") ? ContentType.APPLICATION_ATOM_XML : ContentType.JSON;
 
@@ -94,9 +94,9 @@ public final class ODataErrorResponseChecker {
       if (statusLine.getStatusCode() >= 500 && error!= null && 
           (error.getDetails() == null || error.getDetails().isEmpty()) && 
           (error.getInnerError() == null || error.getInnerError().size() == 0)) {
-        result = new ODataServerErrorException(statusLine);
+        result = new ODataServerErrorException(statusLine, entity);
       } else {
-        result = new ODataClientErrorException(statusLine, error);
+        result = new ODataClientErrorException(statusLine, error, entity);
       }
     }
 

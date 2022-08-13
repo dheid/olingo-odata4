@@ -231,7 +231,7 @@ public class AsyncRequestWrapperImpl<R extends ODataResponse> extends AbstractRe
       }
 
       if (response == null) {
-        throw new ODataClientErrorException(res == null ? null : res.getStatusLine());
+        throw new ODataClientErrorException(res == null ? null : res.getStatusLine(), response.getRawResponse());
       }
 
       return response;

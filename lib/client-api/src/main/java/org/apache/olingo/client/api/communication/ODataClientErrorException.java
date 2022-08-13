@@ -23,6 +23,8 @@ import org.apache.http.StatusLine;
 import org.apache.olingo.commons.api.ex.ODataError;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
 
+import java.io.InputStream;
+
 /**
  * Represents a client error in OData.
  *
@@ -38,16 +40,19 @@ public class ODataClientErrorException extends ODataRuntimeException {
   
   private Header[] headerInfo;
 
+  private InputStream rawResponse;
+
   /**
    * Constructor.
    *
    * @param statusLine request status info.
    */
-  public ODataClientErrorException(final StatusLine statusLine) {
+  public ODataClientErrorException(final StatusLine statusLine, final InputStream entity) {
     super(statusLine.toString());
 
     this.statusLine = statusLine;
     this.error = null;
+    this.rawResponse = entity;
   }
 
   /**
@@ -56,7 +61,7 @@ public class ODataClientErrorException extends ODataRuntimeException {
    * @param statusLine request status info.
    * @param error OData error to be wrapped.
    */
-  public ODataClientErrorException(final StatusLine statusLine, final ODataError error) {
+  public ODataClientErrorException(final StatusLine statusLine, final ODataError error, final InputStream entity) {
     super(error == null ?
         statusLine.toString() :
         (error.getCode() == null || error.getCode().isEmpty() ? "" : "(" + error.getCode() + ") ")
@@ -64,6 +69,7 @@ public class ODataClientErrorException extends ODataRuntimeException {
 
     this.statusLine = statusLine;
     this.error = error;
+    this.rawResponse = entity;
   }
 
   /**
@@ -98,5 +104,9 @@ public class ODataClientErrorException extends ODataRuntimeException {
    */
   public Header[] getHeaderInfo() {
     return headerInfo;
+  }
+
+  public InputStream getRawResponse() {
+    return rawResponse;
   }
 }
